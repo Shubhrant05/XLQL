@@ -6,3 +6,4 @@ sqlparse                 # For basic SQL parsing
 colorama                 # For colored CLI output (optional, improves UX)
 duckdb                   # in memory database
 setuptools
+questionary              # for asking menu based questions
