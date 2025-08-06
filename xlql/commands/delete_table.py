@@ -47,4 +47,4 @@ def main(args):
                 os.remove(full_path)
             print(f"\033[92m[SUCCESS]\033[0m Table '{selected_table}' deleted.")
         else:
-            print("\033[94m[INFO]\033[0m Deletion cancelled.")
+            print("\033[94m[INFO]\033[0m Deletion aborted.")

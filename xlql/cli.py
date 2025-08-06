@@ -34,7 +34,7 @@ def main():
     list_parser.set_defaults(func=list_table.main)
 
     #delete table command
-    delete_parser = subparsers.add_parser("droptable", help="Deletes the selected tables from the selected DB")
+    delete_parser = subparsers.add_parser("droptable", help="Deletes the selected table from the selected DB")
     delete_parser.add_argument("db_name", type=str, help="Name of the database to lookup")
     delete_parser.set_defaults(func=delete_table.main)
 
