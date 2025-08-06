@@ -1,5 +1,5 @@
 import argparse
-from xlql.commands import create_db, list_db, delete_db, insert, list_table, delete_table
+from xlql.commands import create_db, list_db, delete_db, insert, list_table, delete_table, basic_sql
 from xlql.core.utils import get_base_db_location, add_base_db_location
 def main():
     base_db_location = get_base_db_location()
@@ -37,6 +37,17 @@ def main():
     delete_parser = subparsers.add_parser("droptable", help="Deletes the selected table from the selected DB")
     delete_parser.add_argument("db_name", type=str, help="Name of the database to lookup")
     delete_parser.set_defaults(func=delete_table.main)
+
+    show_parser = subparsers.add_parser("show", help="Show rows from a table")
+    show_parser.add_argument("db_name", type=str, nargs="?", help="Name of the database")
+    show_parser.add_argument("table_name", type=str, nargs="?", help="Name of the table")
+    show_parser.add_argument("num_rows", type=int, nargs="?", help="Number of rows to show")
+    show_parser.set_defaults(func=basic_sql.show_table)
+
+    desc_parser = subparsers.add_parser("desc", help="Describe a table's schema")
+    desc_parser.add_argument("db_name", type=str, nargs="?", help="Name of the database")
+    desc_parser.add_argument("table_name", type=str, nargs="?", help="Name of the table")
+    desc_parser.set_defaults(func=basic_sql.describe_table)
 
     args = parser.parse_args()
 
