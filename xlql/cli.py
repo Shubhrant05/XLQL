@@ -1,5 +1,5 @@
 import argparse
-from xlql.commands import create_db, list_db, delete_db, insert
+from xlql.commands import create_db, list_db, delete_db, insert, list_table
 from xlql.core.utils import get_base_db_location, add_base_db_location
 def main():
     base_db_location = get_base_db_location()
@@ -27,6 +27,11 @@ def main():
     #insert table command
     insert_parser = subparsers.add_parser("insert", help="Insert the file in the selected DB")
     insert_parser.set_defaults(func=insert.main)
+
+    #list table command
+    list_parser = subparsers.add_parser("list", help="List the tables in the selected DB")
+    list_parser.add_argument("db_name", type=str, help="Name of the database to lookup")
+    list_parser.set_defaults(func=list_table.main)
 
     args = parser.parse_args()
 
