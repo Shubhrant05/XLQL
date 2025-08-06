@@ -1,6 +1,11 @@
+from xlql.core.utils import get_base_db_location
 def main(args=None):
     import os
-    db_location = input("Enter the path where you want your db: ").strip() 
+    db_location = get_base_db_location()
+    
+    if db_location == "":
+        print("[ERROR] Base DB location not found!")
+        return
     db_name = input("Enter the name of the new database: ").strip()
     if not db_name:
         print("[ERROR] Database name cannot be empty.")
