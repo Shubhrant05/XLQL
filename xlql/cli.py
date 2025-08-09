@@ -38,17 +38,20 @@ def main():
     delete_parser.add_argument("db_name", type=str, help="Name of the database to lookup")
     delete_parser.set_defaults(func=delete_table.main)
 
+    #show first N rows of table command
     show_parser = subparsers.add_parser("show", help="Show rows from a table")
     show_parser.add_argument("db_name", type=str, nargs="?", help="Name of the database")
     show_parser.add_argument("table_name", type=str, nargs="?", help="Name of the table")
     show_parser.add_argument("num_rows", type=int, nargs="?", help="Number of rows to show")
     show_parser.set_defaults(func=basic_sql.show_table)
 
+    #describe table structure command
     desc_parser = subparsers.add_parser("desc", help="Describe a table's schema")
     desc_parser.add_argument("db_name", type=str, nargs="?", help="Name of the database")
     desc_parser.add_argument("table_name", type=str, nargs="?", help="Name of the table")
     desc_parser.set_defaults(func=basic_sql.describe_table)
 
+    #query command
     sql_parser = subparsers.add_parser("sql", help="Run SQL on CSV")
     sql_parser.add_argument("db_name", type=str, nargs="?", help="Name of the database")
     sql_parser.add_argument("query_path", type=str, nargs="?", help="Path of the file containing query")

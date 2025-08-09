@@ -4,20 +4,42 @@ import duckdb
 import pandas as pd
 
 def get_base_db_location():
+    """
+    Helper function to fetch the base DB location as entered by user
+     
+    """
     with open("config.py", "r") as file:
         for line in file:
             if line.startswith("BASE_DB_LOCATION="):
                 return line.split("=", 1)[1].strip().strip("'\"")
             
 def add_base_db_location(base_db_location):
+    """
+    Helper function to add base DB location to config.py file
+    """
     with open("config.py", "w") as config_file:
         config_file.write(f"BASE_DB_LOCATION='{base_db_location}'")
     
 def get_csv_path(db_name, table_name):
+    """
+    Helps locating tables stored as csv files.
+    
+    :params db_name: name of the DB where table is.
+    :params table_name: name of the table.
+    :return: Returns path to the csv
+    """
     base_path = get_base_db_location()
     return os.path.join(base_path, "databases", db_name, table_name)
 
 def run_query_on_csv(query: str, db_name: str, table_name: str):
+    """
+    Helper function for show and desc commands.
+
+    :param query: The query user want to execute.
+    :param db_name: name of the database where the table is present.
+    :param table_name: name of the table on which user want to run the query
+    :return: A dataframe containing result from the query
+    """
     base_path = get_base_db_location()
     if not base_path:
         raise FileNotFoundError("Base DB location is not set.")
@@ -58,6 +80,12 @@ def get_csv_headers(file_path):
         return []
 
 def read_query_from_file(file_path):
+    """
+    Reads query from the file provide by user.
+
+    :param file_path: path of the file containing query
+    :return: Query written in the file
+    """
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             query = f.read().strip()
