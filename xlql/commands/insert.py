@@ -3,9 +3,9 @@ from xlql.core.utils import get_base_db_location, add_base_db_location
 import questionary
 import shutil
 
-def main(args=None):
+def main(args):
     db_location = get_base_db_location()
-    
+
     if not db_location:
         base_db_location = input("Please enter base location to store your db: ")
         db_location = base_db_location
@@ -35,10 +35,13 @@ def main(args=None):
             f"Use '{selected_db}'?"
         ).ask()
 
+    table_name = input("Please enter the table name: ") + '.csv'
+    
     if confirm:
         full_path = os.path.join(databases_path, selected_db)
         file_path = input('Enter the absolute path of your file(CSV): ')
-        shutil.copy(file_path, full_path)
+        destination_path = os.path.join(full_path, table_name)
+        shutil.copy(file_path, destination_path)
         print(f"[SUCCESS] Your file is now added to '{selected_db}'.")
     else:
         print("[INFO] Insertion aborted.")

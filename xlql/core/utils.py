@@ -56,3 +56,31 @@ def get_csv_headers(file_path):
     except Exception as e:
         print(f"\033[91m[ERROR]\033[0m Failed to read CSV headers: {e}")
         return []
+
+def read_query_from_file(file_path):
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            query = f.read().strip()
+        return query
+    except FileNotFoundError:
+        print(f"[ERROR] File '{file_path}' not found.")
+        return None
+    except Exception as e:
+        print(f"[ERROR] {e}")
+        return None
+    
+def register_csv(conn, db_folder):
+    """
+    Registers every CSV in db_folder as a DuckDB table.
+    Table names are derived from the CSV filename (without extension).
+    """
+    base_path = get_base_db_location() + 'databases/' + db_folder
+    for file in os.listdir(base_path):
+        if file.lower().endswith(".csv"):
+            table_name = os.path.splitext(file)[0]
+           
+            csv_path = os.path.join(base_path, file)
+            conn.execute(f"""
+                CREATE OR REPLACE VIEW "{table_name}" AS 
+                SELECT * FROM read_csv_auto('{csv_path}', header=True)
+            """)

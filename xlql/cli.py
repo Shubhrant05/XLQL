@@ -1,5 +1,5 @@
 import argparse
-from xlql.commands import create_db, list_db, delete_db, insert, list_table, delete_table, basic_sql
+from xlql.commands import create_db, list_db, delete_db, insert, list_table, delete_table, basic_sql, query_handler
 from xlql.core.utils import get_base_db_location, add_base_db_location
 def main():
     base_db_location = get_base_db_location()
@@ -48,6 +48,11 @@ def main():
     desc_parser.add_argument("db_name", type=str, nargs="?", help="Name of the database")
     desc_parser.add_argument("table_name", type=str, nargs="?", help="Name of the table")
     desc_parser.set_defaults(func=basic_sql.describe_table)
+
+    sql_parser = subparsers.add_parser("sql", help="Run SQL on CSV")
+    sql_parser.add_argument("db_name", type=str, nargs="?", help="Name of the database")
+    sql_parser.add_argument("query_path", type=str, nargs="?", help="Path of the file containing query")
+    sql_parser.set_defaults(func=query_handler.main)
 
     args = parser.parse_args()
 
