@@ -1,24 +1,32 @@
 import os
-import os
+import json
 import duckdb
 import pandas as pd
 
+CONFIG_DIR = os.path.join(os.path.expanduser("~"), ".xlql")
+CONFIG_FILE = os.path.join(CONFIG_DIR, "config.json")
+
+def ensure_config_exists():
+    """Create config file if it doesn't exist."""
+    if not os.path.exists(CONFIG_DIR):
+        os.makedirs(CONFIG_DIR)
+    if not os.path.exists(CONFIG_FILE):
+        with open(CONFIG_FILE, "w") as f:
+            json.dump({"base_db_location": ""}, f)
+
 def get_base_db_location():
-    """
-    Helper function to fetch the base DB location as entered by user
-     
-    """
-    with open("config.py", "r") as file:
-        for line in file:
-            if line.startswith("BASE_DB_LOCATION="):
-                return line.split("=", 1)[1].strip().strip("'\"")
-            
-def add_base_db_location(base_db_location):
-    """
-    Helper function to add base DB location to config.py file
-    """
-    with open("config.py", "w") as config_file:
-        config_file.write(f"BASE_DB_LOCATION='{base_db_location}'")
+    ensure_config_exists()
+    with open(CONFIG_FILE, "r") as f:
+        return json.load(f).get("base_db_location", "")
+    
+def add_base_db_location(path):
+    ensure_config_exists()
+    with open(CONFIG_FILE, "r+") as f:
+        data = json.load(f)
+        data["base_db_location"] = path
+        f.seek(0)
+        json.dump(data, f)
+        f.truncate()
     
 def get_csv_path(db_name, table_name):
     """

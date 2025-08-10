@@ -20,9 +20,7 @@ It is perfect for quick analysis, structured storage of tabular files, and perfo
 
 ## **Installation**
 ```bash
-git clone https://github.com/yourusername/xlql.git
-cd xlql
-pip install -r requirements.txt
+pip install xlql
 ```
 
 ## **Available Commands**

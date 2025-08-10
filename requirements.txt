@@ -1,6 +1,5 @@
 pandas                   # For reading and manipulating Excel and dataframes
 tabulate                 # Pretty-print tables in CLI
-sqlparse                 # For basic SQL parsing
 duckdb                   # in memory database
 setuptools               # for setup
 questionary              # for asking menu based questions

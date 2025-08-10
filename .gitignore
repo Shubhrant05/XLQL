@@ -5,3 +5,6 @@ rough.sql
 config.py
 */__pycache__/
 *.pyc
+dist/
+build/
+*.egg-info/
