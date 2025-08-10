@@ -1,6 +1,7 @@
 from xlql.core.utils import read_query_from_file, register_csv
 import os
 import duckdb as dd
+from tabulate import tabulate
 import uuid
 
 def main(args):
@@ -22,6 +23,7 @@ def main(args):
 
         # reading SQL query
         query = read_query_from_file(query_path)
+        query = query.removesuffix(';')
         if not query:
             print("[ERROR] Query file is empty.")
             return
@@ -47,7 +49,6 @@ def main(args):
             # Fetch results to Pandas for pretty printing
             result = conn.execute(query).fetchdf()
             if result is not None and not result.empty:
-                from tabulate import tabulate
                 print(tabulate(result, headers=result.columns, tablefmt="fancy_grid", showindex=False))
             else:
                 print("[INFO] Query executed successfully, but returned no results.")
