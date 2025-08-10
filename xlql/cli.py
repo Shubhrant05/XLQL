@@ -55,6 +55,20 @@ def main():
     sql_parser = subparsers.add_parser("sql", help="Run SQL on CSV")
     sql_parser.add_argument("db_name", type=str, nargs="?", help="Name of the database")
     sql_parser.add_argument("query_path", type=str, nargs="?", help="Path of the file containing query")
+
+    # Optional export arguments
+    sql_parser.add_argument(
+        "--format",
+        type=str,
+        choices=["csv", "parquet", "json"],
+        help="Format to export results (csv, parquet, json)"
+    )
+    sql_parser.add_argument(
+        "--output",
+        type=str,
+        help="File path to save exported results"
+    )
+
     sql_parser.set_defaults(func=query_handler.main)
 
     args = parser.parse_args()
