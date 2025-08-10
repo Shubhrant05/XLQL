@@ -1,9 +1,6 @@
 pandas                   # For reading and manipulating Excel and dataframes
-openpyxl                 # Backend engine for reading .xlsx files
-click                    # For CLI building (or use argparse if you prefer stdlib)
 tabulate                 # Pretty-print tables in CLI
 sqlparse                 # For basic SQL parsing
-colorama                 # For colored CLI output (optional, improves UX)
 duckdb                   # in memory database
-setuptools
+setuptools               # for setup
 questionary              # for asking menu based questions
