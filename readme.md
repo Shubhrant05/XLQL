@@ -44,31 +44,31 @@ _Lists all the databases you have_.
 xlql listdb
 ```
 
-### **2.  dropdb**
+### **3.  dropdb**
 _Drops the selected database._ After running the command you will get a menu to choose the database from.
 
 ```bash
 xlql dropdb
 ```
-### **3.  insert**
+### **4.  insert**
 _Inserts a table in the selected database._ After you run the command you get a menu to choose the database. Further add the name for the table and **_absolute path_** of the csv file.
 ```bash
 xlql insert 
 ```
 
-### **4. list**
+### **5. list**
 _Shows all the tables in `mydbname` database._
 ```bash
 xlql list [mydbname]
 ```
 
-### **5.  droptable**
+### **6.  droptable**
 _Deletes the selected table from the specified database._. After you run the command you the menu to choose the table to be deleted from.
 ```bash
 xlql droptable [mydbname]
 ```
 
-### **6.  show**
+### **7.  show**
 _Shows the first N rows of specified table._ The command can be run in three ways. 
 
 - If the `db name and table name are not specified` user gets a menu for both to choose from. 
@@ -82,7 +82,7 @@ _Shows the first N rows of specified table._ The command can be run in three way
 xlql show [mydbname] [mytablename]
 ```
 
-### **7. desc**
+### **8. desc**
 _Describes the schema of the table._ Similar to `xlql shpw` command this can also run in three scenarios.
 - If the `db name and table name are not specified` user gets a menu for both to choose from. 
     - [`xlql show`]
@@ -95,7 +95,7 @@ _Describes the schema of the table._ Similar to `xlql shpw` command this can als
 xlql desc [mydbname] [mytablename]
 ```
 
-### **8.  sql**
+### **9.  sql**
 _Helps user run SQL queries on the inserted tables._ User is supposed to make a `.sql` file and write their query in that file. Also please use the table name you specified and try to follow general SQL syntax rules for best outcomes. There are two ways in which this command helps you.
 
 - If you do not want to store the query result, you can skip the `format` and `output` flags. The result will be printed to your terminal.
