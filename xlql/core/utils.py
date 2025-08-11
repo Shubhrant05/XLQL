@@ -19,14 +19,33 @@ def get_base_db_location():
     with open(CONFIG_FILE, "r") as f:
         return json.load(f).get("base_db_location", "")
     
+import os
+import json
+
 def add_base_db_location(path):
     ensure_config_exists()
+    path = os.path.expanduser(path)
+    path = os.path.abspath(path)
+    if not path.endswith(os.sep):
+        path += os.sep
+
+    path = os.path.normpath(path) + os.sep
+    if not os.path.exists(path):
+        try:
+            os.makedirs(path, exist_ok=True)
+        except Exception as e:
+            print(f"[ERROR] Could not create directory '{path}': {e}")
+            return
+
+    # Save to config
     with open(CONFIG_FILE, "r+") as f:
         data = json.load(f)
         data["base_db_location"] = path
         f.seek(0)
-        json.dump(data, f)
+        json.dump(data, f, indent=4)
         f.truncate()
+
+    print(f"[SUCCESS] Base DB location set to: {path}")
     
 def get_csv_path(db_name, table_name):
     """
@@ -110,7 +129,7 @@ def register_csv(conn, db_folder):
     Registers every CSV in db_folder as a DuckDB table.
     Table names are derived from the CSV filename (without extension).
     """
-    base_path = get_base_db_location() + 'databases/' + db_folder
+    base_path = os.path.join(get_base_db_location(), 'databases', db_folder)
     for file in os.listdir(base_path):
         if file.lower().endswith(".csv"):
             table_name = os.path.splitext(file)[0]

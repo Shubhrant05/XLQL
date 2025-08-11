@@ -3,7 +3,7 @@ from xlql.commands import create_db, list_db, delete_db, insert, list_table, del
 from xlql.core.utils import get_base_db_location, add_base_db_location
 def main():
     base_db_location = get_base_db_location()
-
+    
     if base_db_location == "":
         base_db_location = input("Please enter base location to store your db: ")
         add_base_db_location(base_db_location)

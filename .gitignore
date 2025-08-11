@@ -2,6 +2,7 @@ myenv/
 Employee_Sample_Data.csv
 titanic-parquet.csv
 rough.sql
+rough.py
 config.py
 */__pycache__/
 *.pyc
