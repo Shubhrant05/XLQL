@@ -18,9 +18,6 @@ def get_base_db_location():
     ensure_config_exists()
     with open(CONFIG_FILE, "r") as f:
         return json.load(f).get("base_db_location", "")
-    
-import os
-import json
 
 def add_base_db_location(path):
     ensure_config_exists()
