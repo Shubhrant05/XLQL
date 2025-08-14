@@ -139,3 +139,12 @@ def register_csv(conn, db_folder):
                 CREATE OR REPLACE VIEW "{table_name}" AS 
                 SELECT * FROM read_csv_auto('{csv_path}', header=True)
             """)
+
+def validate_sql_syntax(query: str, conn: duckdb.DuckDBPyConnection) -> bool:
+    try:
+        # Use EXPLAIN to parse without executing
+        conn.execute(f"EXPLAIN {query}")
+        return True
+    except Exception as e:
+        print(f"Invalid SQL: {e}")
+        return False

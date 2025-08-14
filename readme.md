@@ -94,14 +94,17 @@ xlql desc [mydbname] [mytablename]
 ```
 
 ### **9.  sql**
-_Helps user run SQL queries on the inserted tables._ User is supposed to make a `.sql` file and write their query in that file. Also please use the table name you specified and try to follow general SQL syntax rules for best outcomes. There are two ways in which this command helps you.
+_Helps user run SQL queries on the inserted tables._ User is supposed to make a `.sql` file and write their query in that file. Also please use the table name you specified and try to follow general SQL syntax rules for best outcomes. 
 
-- If you do not want to store the query result, you can skip the `format` and `output` flags. The result will be printed to your terminal.
+After running the command `xlql sql` you will be prompted to answer these question
 
-- However if you wish to keep the output with you. Specify the format (CSV, JSON, Parquet) via the `format` flag and the output directory path using the `output` flag.
+- Choose the DB.
+- Path to the query file.
+- If you want to export your data?
+- What format you want to export to?
 
 ```bash
-xlql sql [mydbname] [querypath] --format [outputformat] --output [output_directory_path]
+xlql sql
 ```
 
 ## **System Architecture Overview**

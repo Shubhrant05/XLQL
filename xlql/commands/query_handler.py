@@ -1,52 +1,94 @@
-from xlql.core.utils import read_query_from_file, register_csv
 import os
-import duckdb as dd
-from tabulate import tabulate
 import uuid
+import duckdb as dd
+import questionary
+from tabulate import tabulate
+from xlql.core.utils import read_query_from_file, register_csv, get_base_db_location, validate_sql_syntax
 
-def main(args):
+def list_databases():
+    base_path = get_base_db_location()
+    if not base_path:
+        print("\033[2m\033[32mTry running `xlql createdb` to get started.\033[0m")
+        return
+    db_root = os.path.join(base_path, "databases")
+    if not os.path.exists(db_root):
+        return []
+    return [folder for folder in os.listdir(db_root) if os.path.exists(os.path.join(db_root, folder))]
+
+def main(args=None):
     try:
-        db_name = args.db_name
-        query_path = args.query_path
-        export_format = getattr(args, "format", None)  # csv, parquet, json
-        export_path = getattr(args, "output", None)    # file path to save ouput
-
-        # validating db name
-        if not db_name:
-            print("[ERROR] Database name is required.")
+        db_list = list_databases()
+        if not db_list:
+            print("[ERROR] No databases found. Please create one first.")
             return
 
-        # validating query path
+        db_name = questionary.select(
+            "Select a database:",
+            choices=db_list
+        ).ask()
+        if not db_name:
+            print("[INFO] Operation cancelled.")
+            return
+
+        # asking for query file path
+        query_path = questionary.path(
+            "Enter the path to your SQL query file:"
+        ).ask()
         if not query_path or not os.path.exists(query_path):
             print(f"[ERROR] Query file '{query_path}' not found.")
             return
 
-        # reading SQL query
-        query = read_query_from_file(query_path)
-        query = query.removesuffix(';')
+        #connecting to DuckDB & register CSVs
+        conn = dd.connect(database=':memory:')
+        register_csv(conn, db_name)
+# reading SQL query
+        query = read_query_from_file(query_path).strip()
+        query = query.rstrip(';').strip()
+
+        # TODO: Add in a query validator to check the syntax and to check if only the query is read
+        
+        is_query_valid = validate_sql_syntax(query, conn)
+
         if not query:
             print("[ERROR] Query file is empty.")
             return
+        if is_query_valid == False:
+            print("[ERROR] Syntax error in query.")
+            return
         
-        # Run query in DuckDB
-        conn = dd.connect(':memory:')
-        register_csv(conn, db_name)
+        # asking user if they want to export
+        export_choice = questionary.confirm(
+            "Do you want to export the results to a file?"
+        ).ask()
+        
+        if export_choice:
+            # choosing export format
+            export_format = questionary.select(
+                "Select export format:",
+                choices=["csv", "json", "parquet"]
+            ).ask()
 
-        if export_format and export_path:
-            # If export_path is a directory, generate a filename
-            if os.path.isdir(export_path):
-                file_ext = export_format.lower()
-                file_name = f"xlql_export_{uuid.uuid4().hex[:8]}.{file_ext}"
-                export_path = os.path.join(export_path, file_name)
+            # asking export path
+            export_path = questionary.path(
+                "Enter the directory path where the file should be saved:"
+            ).ask()
 
-            # Ensure parent directory exists
-            os.makedirs(os.path.dirname(export_path), exist_ok=True)
+            if not os.path.isdir(export_path):
+                os.makedirs(export_path, exist_ok=True)
 
-            # Run export
-            conn.execute(f"COPY ({query}) TO '{export_path}' (FORMAT {export_format.upper()});")
-            print(f"[SUCCESS] Query results exported to '{export_path}' in {export_format.upper()} format.")
+            file_ext = export_format.lower()
+            file_name = f"xlql_export_{uuid.uuid4().hex[:8]}.{file_ext}"
+            full_export_path = os.path.join(export_path, file_name)
+
+            conn.execute(f"""
+                COPY ({query})
+                TO '{full_export_path}'
+                (FORMAT {export_format.upper()});
+            """)
+
+            print(f"[SUCCESS] Query results exported to '{full_export_path}' in {export_format.upper()} format.")
         else:
-            # Fetch results to Pandas for pretty printing
+            # shhowing results in terminal
             result = conn.execute(query).fetchdf()
             if result is not None and not result.empty:
                 print(tabulate(result, headers=result.columns, tablefmt="fancy_grid", showindex=False))
