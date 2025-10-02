@@ -1,5 +1,6 @@
 import os
 from xlql.core.utils import get_base_db_location, add_base_db_location
+
 def main(args):
     db_location = get_base_db_location()
     

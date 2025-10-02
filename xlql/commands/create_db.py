@@ -1,4 +1,6 @@
 from xlql.core.utils import get_base_db_location, add_base_db_location
+from xlql.core.logger_config import logger
+
 def main(args=None):
     import os
     db_location = get_base_db_location()
@@ -16,7 +18,9 @@ def main(args=None):
     db_path = os.path.join(db_location, "databases", db_name)
 
     if os.path.exists(db_path):
+        logger.error(f"[ERROR] Database '{db_name}' already exists at {db_path}")
         print(f"[ERROR] Database '{db_name}' already exists at {db_path}")
     else:
         os.makedirs(db_path, exist_ok=True)
+        logger.info(f"[SUCCESS] Database '{db_name}' created successfully at {db_path}")
         print(f"[SUCCESS] Database '{db_name}' created successfully at {db_path}")

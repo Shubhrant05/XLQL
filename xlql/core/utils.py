@@ -145,3 +145,13 @@ def validate_sql_syntax(query: str, conn: duckdb.DuckDBPyConnection) -> bool:
     except Exception as e:
         print(f"Invalid SQL: {e}")
         return False
+    
+def list_databases():
+    base_path = get_base_db_location()
+    if not base_path:
+        print("\033[2m\033[32mTry running `xlql createdb` to get started.\033[0m")
+        return
+    db_root = os.path.join(base_path, "databases")
+    if not os.path.exists(db_root):
+        return []
+    return os.listdir(db_root)

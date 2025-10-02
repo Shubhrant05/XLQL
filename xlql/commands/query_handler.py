@@ -3,17 +3,8 @@ import uuid
 import duckdb as dd
 import questionary
 from tabulate import tabulate
-from xlql.core.utils import read_query_from_file, register_csv, get_base_db_location, validate_sql_syntax
+from xlql.core.utils import read_query_from_file, register_csv, list_databases, validate_sql_syntax
 
-def list_databases():
-    base_path = get_base_db_location()
-    if not base_path:
-        print("\033[2m\033[32mTry running `xlql createdb` to get started.\033[0m")
-        return
-    db_root = os.path.join(base_path, "databases")
-    if not os.path.exists(db_root):
-        return []
-    return [folder for folder in os.listdir(db_root) if os.path.exists(os.path.join(db_root, folder))]
 
 def main(args=None):
     try:
@@ -41,11 +32,10 @@ def main(args=None):
         #connecting to DuckDB & register CSVs
         conn = dd.connect(database=':memory:')
         register_csv(conn, db_name)
-# reading SQL query
+        
+        # reading SQL query
         query = read_query_from_file(query_path).strip()
         query = query.rstrip(';').strip()
-
-        # TODO: Add in a query validator to check the syntax and to check if only the query is read
         
         is_query_valid = validate_sql_syntax(query, conn)
 

@@ -19,7 +19,7 @@ def list_databases():
     db_root = os.path.join(base_path, "databases")
     if not os.path.exists(db_root):
         return []
-    return [folder for folder in os.listdir(db_root) if os.path.exists(os.path.join(db_root, folder))]
+    return os.listdir(db_root)
 
 def list_tables(db_name):
     db_location = get_base_db_location()
@@ -30,7 +30,7 @@ def list_tables(db_name):
     db_folder = os.path.join(db_location, "databases", db_name)
     if not os.path.exists(db_folder):
         return []
-    
+    #TODO: Add check for file
     return [f for f in os.listdir(db_folder) if os.path.isfile(os.path.join(db_folder, f))]
 
 def connect_to_db():
@@ -69,7 +69,7 @@ def show_table(args=None):
 
         query = f"SELECT * FROM {table_name} LIMIT {num_rows};"
         result = run_query_on_csv(query, db_name, table_name)
-        print(tabulate(result, headers=get_csv_headers(csv_path), tablefmt='psql', showindex=False))
+        print(tabulate(result, headers=get_csv_headers(csv_path), tablefmt='fancy_grid', showindex=False))
 
     except Exception as e:
         print(f"[ERROR] {str(e)}")
@@ -97,7 +97,7 @@ def describe_table(args=None):
 
         query = f"DESCRIBE {table_name};"
         result = run_query_on_csv(query, db_name, table_name)
-        print(tabulate(result, headers=result.columns.tolist(), tablefmt='psql', showindex=True))
+        print(tabulate(result, headers=result.columns.tolist(), tablefmt='fancy_grid', showindex=True))
 
     except Exception as e:
         print(f"[ERROR] {str(e)}")

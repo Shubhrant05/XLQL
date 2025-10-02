@@ -1,6 +1,8 @@
 import argparse
 from xlql.commands import create_db, list_db, delete_db, insert, list_table, delete_table, basic_sql, query_handler
 from xlql.core.utils import get_base_db_location, add_base_db_location
+from xlql.core.logger_config import logger
+
 def main():
     base_db_location = get_base_db_location()
     
@@ -30,7 +32,6 @@ def main():
 
     #list table command
     list_parser = subparsers.add_parser("list", help="List the tables in the selected DB")
-    list_parser.add_argument("db_name", type=str, help="Name of the database to lookup")
     list_parser.set_defaults(func=list_table.main)
 
     #delete table command
